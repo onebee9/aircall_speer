@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ActivityDetail from './ActivityDetail.jsx';
@@ -13,10 +12,11 @@ import RestoreIcon from '@mui/icons-material/Restore';
 
 
 export default function InteractiveList() {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState('recent');
   const [callList, setCallList] = useState([]);
   const [archivedCalls, setArchivedCalls] = React.useState([]);
   const [availableCalls, setAvailableCalls] = React.useState([]);
+  const [inProgress, setInProgress] = React.useState(false);
 
 
   const handleArchiveCallClick = (callID) => {
@@ -29,12 +29,10 @@ export default function InteractiveList() {
       .then((response) => {
         const oldCallIndex = callList.findIndex(call => call.id === callID);
         //
-        setCallList((prev) => {
-          const newCallList = [...prev]
-          newCallList[oldCallIndex] = response.data
-          return newCallList;
-        })
-        console.log('callID', response.data);
+        const newCallList = [...callList]
+        newCallList[oldCallIndex] = response.data
+        setCallList(newCallList);
+        handleAvailableCallsDisplay(newCallList);
       })
       .catch((error) => {
         console.log(error);
@@ -52,12 +50,10 @@ export default function InteractiveList() {
       .then((response) => {
         const oldCallIndex = callList.findIndex(call => call.id === callID);
         //
-        setCallList((prev) => {
-          const newCallList = [...prev]
-          newCallList[oldCallIndex] = response.data
-          return newCallList;
-        })
-        console.log('callID', response.data);
+        const newCallList = [...callList]
+        newCallList[oldCallIndex] = response.data
+        setCallList(newCallList);
+        handleArchivedCallsDisplay(newCallList);
       })
       .catch((error) => {
         console.log(error);
@@ -65,47 +61,69 @@ export default function InteractiveList() {
 
   }
 
-  const handleCallsDisplay = () => {
-    axios({
+  const getCallsData = () => {
+    return axios({
       method: 'get',
       url: ` https://aircall-job.herokuapp.com/activities`
     })
       .then((response) => {
-        setCallList(response.data);
+
+        return response.data;
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  const handleArchivedCallsDisplay = () => {
-    const archivedCallList = callList.filter(call => call.is_archived === true);
-    setArchivedCalls(archivedCallList);
-    console.log(callList)
-    console.log(archivedCallList);
+  const handleCallsDisplay = (calls) => {
+    setCallList(calls);
   }
 
-  const handleAvailableCallsDisplay = () => {
-    const availableCallsList = callList.filter(call => call.is_archived !== true);
+  const handleArchivedCallsDisplay = (calls) => {
+    const archivedCallList = calls.filter(call => call.is_archived === true);
+    setArchivedCalls(archivedCallList);
+  }
+
+  const handleAvailableCallsDisplay = (calls) => {
+    const availableCallsList = calls.filter(call => call.is_archived !== true);
+    console.log("availablecalls", availableCallsList)
+    console.log("callList", callList)
     setAvailableCalls(availableCallsList);
-    // console.log(archivedCallList);
   }
 
   //All user actions for calls
-  const options = {
-    Archive: handleArchiveCallClick,
-    Unarchive: handleUnarchiveCallClick
-  }
+  const options = [
+    {
+      key: 'Archive',
+      handler: handleArchiveCallClick,
+      scopes:['recent']
+    },
+    {
+      key: 'Unarchive',
+      handler: handleUnarchiveCallClick,
+      scopes:['archived']
+    }
+  ]
 
   useEffect(() => {
-    handleCallsDisplay()
+    const execute = () => {
+      return getCallsData()
+        .then((calls) => {
+          handleCallsDisplay(calls)
+          handleAvailableCallsDisplay(calls);
+        })
+    }
+    execute()
+
   }, []);
 
-  const callListType = (<ActivityDetail callList={value === 'Archived' ? archivedCalls : availableCalls} options={options} />)
+
+
+  const callListType = (<ActivityDetail callList={value === 'archived' ? archivedCalls : availableCalls} options={options} allCallData={availableCalls} value={value} />)
   // const callListType =  value === 'Archived'? (<ActivityDetail callList ={ archivedCalls} options ={options.Unarchive}/>) : (<ActivityDetail callList ={availableCalls} options ={options.Archive}/>);
 
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
+    <Box sx={{ flexGrow: 1 }}>
       <Grid item xs={12} md={6}>
         {callListType}
         <BottomNavigation
@@ -115,8 +133,8 @@ export default function InteractiveList() {
             setValue(newValue);
           }}
         >
-          <BottomNavigationAction value="recent" onClick={() => {handleAvailableCallsDisplay()}} label="Recents" icon={<RestoreIcon />} />
-          <BottomNavigationAction value="Archived" onClick={() => { handleArchivedCallsDisplay() }} label="Archived" icon={<FolderIcon />} />
+          <BottomNavigationAction value="recent" onClick={() => { handleAvailableCallsDisplay(callList) }} label="Recents" icon={<RestoreIcon />} />
+          <BottomNavigationAction value="archived" onClick={() => { handleArchivedCallsDisplay(callList) }} label="Archived" icon={<FolderIcon />} />
         </BottomNavigation>
       </Grid>
     </Box>
