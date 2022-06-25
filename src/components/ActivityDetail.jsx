@@ -14,17 +14,19 @@ import { ListItemSecondaryAction } from '@mui/material';
 export default function ActivityDetail(props) {
   console.log("props_____", props);
   const { callList, options, allCallData, value } = props;
- 
+  console.log('prop-value', props.value)
+
   return (
     <List>
-      { callList.map((calls) => (<Item calls={calls} options={options} key={calls.id} />))}
+      {callList.map((calls) => (<Item calls={calls} options={options} key={calls.id} value={value} />))}
     </List>)
 
 }
 
 const Item = (props) => {
 
-  const { calls, options } = props;
+  const { calls, options, value } = props;
+  console.log('valuees', props.value, props.options)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -72,18 +74,19 @@ const Item = (props) => {
 
         >
           <MenuList>
-            {Object.keys(options).map((option) => {
+            {options.map((option) => {
               return (
+                option.scopes.includes(value) &&
                 <MenuItem
-                  key={calls.id-option}
+                  key={calls.id - option}
                   onClick={(e) => {
 
                     //Calls the function associated with the action
-                    const optionsHandler = options[option];
+                    const optionsHandler = option.handler;
                     optionsHandler(calls.id)
                     setAnchorEl(null);
                   }}>
-                  {option}
+                  {option.key}
                 </MenuItem>
               )
             }
