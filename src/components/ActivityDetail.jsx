@@ -12,17 +12,17 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ListItemSecondaryAction } from '@mui/material';
 
 export default function ActivityDetail(props) {
+  console.log(props);
   const { callList, options } = props;
   return (
     <List>
-      {callList.map((calls) => (<Item calls={calls} options={options} />))}
+      {callList.map((calls) => (<Item calls={calls} options={options} key={calls.id}/>))}
     </List>);
 }
 
 const Item = (props) => {
-  const { calls, options } = props;
 
-  // const [open, setOpen] = React.useState(false);
+  const { calls, options } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -34,7 +34,6 @@ const Item = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
 
   return (
     <ListItem
@@ -68,6 +67,7 @@ const Item = (props) => {
           }}
           anchorEl={anchorEl}
           open={open}
+          onClose={handleClose}
 
         >
           <MenuList>
