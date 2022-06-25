@@ -13,8 +13,6 @@
   width: 376px;
   height: 666px;
   z-index: 100;
-  
-
   background: white;
   border-radius: 3px;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, .9);
@@ -22,10 +20,26 @@
 
 #app .container-view {
   padding: 20px;
-  background-color: brown;
+}
+#app .container-view .archiveAll{
+  padding-left: 10px;
 }
 
 #app .container .call-log{
   overflow-y: auto;
+  position: relative;
 }
 
+#app .container .call-log > div > div > ul{
+  overflow: auto;
+}
+
+#app .container .call-log > div > div > div{
+  position: fixed;
+  bottom: 63px;
+  max-width:376px;
+  width:100%;
+  border-top:1px solid #eaeaea;
+}
+
+.call-list{overflow:auto}
