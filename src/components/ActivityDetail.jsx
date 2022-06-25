@@ -12,12 +12,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ListItemSecondaryAction } from '@mui/material';
 
 export default function ActivityDetail(props) {
-  console.log(props);
-  const { callList, options } = props;
+  console.log("props_____", props);
+  const { callList, options, allCallData, value } = props;
+ 
   return (
     <List>
-      {callList.map((calls) => (<Item calls={calls} options={options} key={calls.id}/>))}
-    </List>);
+      { callList.map((calls) => (<Item calls={calls} options={options} key={calls.id} />))}
+    </List>)
+
 }
 
 const Item = (props) => {
@@ -28,7 +30,6 @@ const Item = (props) => {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget)
   };
 
   const handleClose = () => {
@@ -46,7 +47,7 @@ const Item = (props) => {
       </ListItemAvatar>
       <ListItemText
         primary={calls.from}
-        secondary={calls.created_at + calls.is_archived}
+        secondary={calls.via}
       />
       <ListItemSecondaryAction>
         <IconButton
@@ -74,7 +75,7 @@ const Item = (props) => {
             {Object.keys(options).map((option) => {
               return (
                 <MenuItem
-                  key={calls.id}
+                  key={calls.id-option}
                   onClick={(e) => {
 
                     //Calls the function associated with the action

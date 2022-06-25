@@ -8,11 +8,6 @@ const App = () => {
   return (
     <div className='container'>
       <Header />
-      <div className="container-view">
-        Archive all
-        {/*remember to move padding below to stylesheet */}
-        {/* <i class="fa-solid fa-folder-closed " ></i>   */}
-      </div>
       <div className="call-log">
         <InteractiveList />
       </div>
