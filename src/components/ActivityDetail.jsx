@@ -13,7 +13,7 @@ import { ListItemSecondaryAction } from '@mui/material';
 
 export default function ActivityDetail(props) {
   console.log("props_____", props);
-  const { callList, options, allCallData, value } = props;
+  const { callList, options, value } = props;
   console.log('prop-value', props.value)
 
   return (
@@ -26,7 +26,6 @@ export default function ActivityDetail(props) {
 const Item = (props) => {
 
   const { calls, options, value } = props;
-  console.log('valuees', props.value, props.options)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 

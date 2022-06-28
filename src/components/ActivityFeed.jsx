@@ -16,7 +16,6 @@ export default function InteractiveList() {
   const [callList, setCallList] = useState([]);
   const [archivedCalls, setArchivedCalls] = React.useState([]);
   const [availableCalls, setAvailableCalls] = React.useState([]);
-  const [inProgress, setInProgress] = React.useState(false);
 
 
   const handleArchiveCallClick = (callID) => {
@@ -28,7 +27,8 @@ export default function InteractiveList() {
     })
       .then((response) => {
         const oldCallIndex = callList.findIndex(call => call.id === callID);
-        //
+
+        //update calllist when call is archived 
         const newCallList = [...callList]
         newCallList[oldCallIndex] = response.data
         setCallList(newCallList);
@@ -41,7 +41,6 @@ export default function InteractiveList() {
   }
 
   const handleUnarchiveCallClick = (callID) => {
-    console.log(callID, "input")
     axios({
       method: 'post',
       url: `https://aircall-job.herokuapp.com/activities/${callID}`,
@@ -49,7 +48,8 @@ export default function InteractiveList() {
     })
       .then((response) => {
         const oldCallIndex = callList.findIndex(call => call.id === callID);
-        //
+
+        //update calllist when call is unarchived 
         const newCallList = [...callList]
         newCallList[oldCallIndex] = response.data
         setCallList(newCallList);
@@ -96,12 +96,12 @@ export default function InteractiveList() {
     {
       key: 'Archive',
       handler: handleArchiveCallClick,
-      scopes:['recent']
+      scopes: ['recent']
     },
     {
       key: 'Unarchive',
       handler: handleUnarchiveCallClick,
-      scopes:['archived']
+      scopes: ['archived']
     }
   ]
 
@@ -117,11 +117,7 @@ export default function InteractiveList() {
 
   }, []);
 
-
-
   const callListType = (<ActivityDetail callList={value === 'archived' ? archivedCalls : availableCalls} options={options} allCallData={availableCalls} value={value} />)
-  // const callListType =  value === 'Archived'? (<ActivityDetail callList ={ archivedCalls} options ={options.Unarchive}/>) : (<ActivityDetail callList ={availableCalls} options ={options.Archive}/>);
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid item xs={12} md={6}>
