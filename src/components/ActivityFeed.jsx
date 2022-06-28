@@ -19,7 +19,6 @@ export default function InteractiveList() {
 
 
   const handleArchiveCallClick = (callID) => {
-    console.log(callID, "input")
     axios({
       method: 'post',
       url: `https://aircall-job.herokuapp.com/activities/${callID}`,
@@ -86,8 +85,6 @@ export default function InteractiveList() {
 
   const handleAvailableCallsDisplay = (calls) => {
     const availableCallsList = calls.filter(call => call.is_archived !== true);
-    console.log("availablecalls", availableCallsList)
-    console.log("callList", callList)
     setAvailableCalls(availableCallsList);
   }
 
