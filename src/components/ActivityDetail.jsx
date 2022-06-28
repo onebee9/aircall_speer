@@ -12,15 +12,13 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { ListItemSecondaryAction } from '@mui/material';
 
 export default function ActivityDetail(props) {
-  console.log("props_____", props);
   const { callList, options, value } = props;
-  console.log('prop-value', props.value)
 
   return (
     <List>
       {callList.map((calls) => (<Item calls={calls} options={options} key={calls.id} value={value} />))}
-    </List>)
-
+    </List>
+  )
 }
 
 const Item = (props) => {
